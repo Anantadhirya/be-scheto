@@ -30,6 +30,6 @@
 - GitHub Repository
   - Frontend: [https://github.com/Anantadhirya/fe-scheto](https://github.com/Anantadhirya/fe-scheto)
   - Backend: [https://github.com/Anantadhirya/be-scheto](https://github.com/Anantadhirya/be-scheto)
-- Deployment:
+- Deployment: [https://scheto.vercel.app](https://scheto.vercel.app)
 - Presentation video:
 - Presentation file:
