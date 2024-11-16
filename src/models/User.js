@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema({
         type : String,
         required : true,
         trim : true,
-        index : true
+        index : true,
+        unique : true
     }, 
     password : {
         type : String,
@@ -23,7 +24,8 @@ const UserSchema = new mongoose.Schema({
         type : String,
         required : true,
         trim : true,
-        index : true
+        index : true,
+        unique : true
     },
     joined_group : {
         type : [{

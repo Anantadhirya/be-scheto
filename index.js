@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser")
 const mongoose = require("mongoose")
 
 const errorHandler = require("./src/middleware/errorHandler");
+const rateLimiter = require("./src/middleware/rateLimiter")
 
 dotenv.config();
 
@@ -18,16 +19,23 @@ app.use(cors(corsConfig()));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(rateLimiter.rateLimiterStandard)
 
 // Routes
 app.route("/").get((req, res, next) => {
   res.status(200).json({ message: "Hello World" });
 });
 
+app.use("/auth", require("./src/routes/authRoutes") )
+
+
+
 app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 const mongoURI = process.env.DB_CONN
+
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 
