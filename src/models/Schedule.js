@@ -52,6 +52,7 @@ const Schedule = new mongoose.Schema({
     },
     schedule_type : {
         enum : [...allowed_schedule_type],
+        type: String,
         default : "NONE",
         required : true
     }
