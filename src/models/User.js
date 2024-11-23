@@ -10,6 +10,14 @@ const UserSchema = new mongoose.Schema({
         index : true,
         unique : true
     }, 
+    firstName : {
+        type : String,
+        trim : true,
+    }, 
+    lastName : {
+        type : String,
+        trim : true,
+    },
     password : {
         type : String,
         required : true,
@@ -42,6 +50,18 @@ const UserSchema = new mongoose.Schema({
         }],
         required : true,
         default : []
+    },
+    address : {
+        type : String,
+        trim : true,
+    },
+    phoneNumber : {
+        type : String,
+        trim : true,
+    },
+    gender : {
+        type : String,
+        enum : ['female', 'male']
     }
 
 }, {

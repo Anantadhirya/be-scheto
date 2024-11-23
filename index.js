@@ -27,6 +27,7 @@ app.route("/").get((req, res, next) => {
 });
 
 app.use("/auth", require("./src/routes/authRoutes") )
+app.use("/profile", require("./src/routes/profileRoutes") )
 
 
 

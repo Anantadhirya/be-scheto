@@ -12,8 +12,14 @@ const allowed_schedule_type = [
     "NONE"
 ]
 
+const allowed_gender = [
+    'female',
+    'male'
+]
+
 
 module.exports = {
     allowed_schedule_type,
-    enum_schedule_type
+    enum_schedule_type,
+    allowed_gender
 }

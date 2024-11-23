@@ -45,7 +45,7 @@ const EnsureUser = async (req,res,next) => {
         }
         
         // verifikasi dengan id di database
-        const findUser = await User.findById(credential._id).select("username email _id");
+        const findUser = await User.findById(credential._id).select("-password");
 
         if(!findUser) {
             // user tidak ditemukan
