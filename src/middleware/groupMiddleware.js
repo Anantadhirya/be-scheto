@@ -8,10 +8,10 @@ const Group = require("../models/Group")
 const validateQueryGetSchedule = [
     query('startDate')
         .notEmpty().withMessage("start date cannot be empty")
-        .isDate().withMessage("start date have to be date"),
+        .isISO8601().toDate().withMessage("start date have to be date"),
     query('endDate')
         .notEmpty().withMessage("end date cannot be empty")
-        .isDate().withMessage("end date have to be date"),
+        .isISO8601().toDate().withMessage("end date have to be date")
 ]
 
 const validateBodyCreateGroup = [

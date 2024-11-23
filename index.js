@@ -29,7 +29,7 @@ app.route("/").get((req, res, next) => {
 app.use("/auth", require("./src/routes/authRoutes") )
 app.use("/profile", require("./src/routes/profileRoutes") )
 app.use("/group", require("./src/routes/groupRoutes") )
-
+app.use("/schedule", require("./src/routes/scheduleRoutes") )
 
 
 app.use(errorHandler);

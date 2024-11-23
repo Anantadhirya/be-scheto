@@ -214,6 +214,27 @@ const DetailGroup = asyncHandler(async (req,res,next) => {
 })
 
 /**
+    GET /id/:groupID/member
+    List detail mengenai group
+*/
+const DetailAnggotaGroup = asyncHandler(async (req,res,next) => {
+    const groups = await Group.findById(req.params.groupID)
+        .populate({
+            path: 'id_leader', // Populate leader field
+            select: 'username profile_image_url firstName lastName address phoneNumber email', // Only include these fields
+        })
+        .populate({
+            path: 'member_id.id_user', // Populate members' user field
+            select: 'username profile_image_url firstName lastName address phoneNumber email', // Only include these fields
+        })
+        .select("member_id id_leader")
+        .lean();
+    
+    return res.status(201).json({group : groups})
+
+})
+
+/**
     GET /id/:groupID/schedule
     Dapatkan semua schedule event group dan anggota
     query : {
@@ -246,7 +267,7 @@ const GetScheduleGroup = asyncHandler(async (req,res,next) => {
             path: 'group_data.member_rejected',
             select: 'username email _id', // Include only specific fields for rejected members
         })
-        .select("id_creator group_data is_user_owned title description start_time end_time schedule_type")
+        .select("id_creator group_data is_user_owned title description start_time end_time schedule_type _id")
         .lean();
     
 
@@ -259,7 +280,7 @@ const GetScheduleGroup = asyncHandler(async (req,res,next) => {
             path: 'id_creator',
             select: 'username email', // Include only specific fields from the user document
         })
-        .select("id_creator is_user_owned start_time end_time schedule_type")
+        .select("id_creator is_user_owned start_time end_time schedule_type _id")
         .lean();
     
     return res.status(201).json({groups : schedulesGroup, individuals : individualMemberSchedule})
@@ -273,5 +294,6 @@ module.exports = {
     ListGroupUser,
     GenerateCode,
     DetailGroup,
-    GetScheduleGroup
+    GetScheduleGroup,
+    DetailAnggotaGroup
 }
