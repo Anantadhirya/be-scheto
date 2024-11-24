@@ -70,7 +70,7 @@ const RegisterHandler = asyncHandler(async (req,res,next) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, email,password } = req.body;
+    const { username, email,password, firstName, lastName } = req.body;
     // cek jika violate unique
     const findAlreadyExist = await User.find({$or: 
         [
@@ -91,7 +91,9 @@ const RegisterHandler = asyncHandler(async (req,res,next) => {
     const newUser = new User({
         "email" : email,
         "username" : username,
-        "password" : hashPassword
+        "password" : hashPassword,
+        "firstName" : firstName,
+        "lastName" : lastName
     })
 
     await newUser.save();

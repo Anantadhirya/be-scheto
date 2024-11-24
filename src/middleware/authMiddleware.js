@@ -10,14 +10,18 @@ const { check, validationResult, param, query, body } = require('express-validat
 const validateRegister = [
     body('username')
         .notEmpty().withMessage("username cannot be empty")
-        .isLength({min: 1, max: 100}).withMessage("maximum of 100 letter"),
-
+        .isLength({min: 1, max: 100}).withMessage("username is a maximum of 100 letter"),
+    body('firstName')
+        .notEmpty().withMessage("first name cannot be empty")
+        .isLength({min: 1, max: 100}).withMessage("first name is a maximum of 100 letter"),
+    body('lastName')
+        .optional(),
     body('email')
         .notEmpty().withMessage("email cannot be empty")
         .isEmail().withMessage("email is not valid"),
     body('password')
         .notEmpty().withMessage("password cannot be empty")
-        .isLength({min: 8}).withMessage("minimum of 8 letter"),
+        .isLength({min: 8}).withMessage("password have a minimum of 8 letter"),
 
 ]
 
