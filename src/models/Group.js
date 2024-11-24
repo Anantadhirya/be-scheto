@@ -13,6 +13,10 @@ const GroupSchema = new mongoose.Schema({
         required : true,
         type : mongoose.Schema.Types.ObjectId
     },
+    description : {
+        type : String,
+        trim : true,
+    },
     member_id : {
         type : [{
             id_user : {

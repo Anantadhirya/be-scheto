@@ -55,14 +55,14 @@ const LeaveGroup = asyncHandler(async (req,res,next) => {
 */
 const JoinGroup = asyncHandler(async (req,res,next) => {
     const { groupCode } = req.params;
-
+    const { group_code } = req.body;
     let groupID;
-    const checkGroup = await Group.findOne({invite_code : groupCode}).lean();
+    const checkGroup = await Group.findOne({invite_code : group_code}).lean();
     if(!checkGroup) {
         // group doesnt exist
         return res.status(401).json({message : "Group not found"})
     }
-    if(req.user.joined_group.includes(groupCode) && (checkGroupMember.member_id.includes(req.user._id) || checkGroupMember.id_leader == req.user_id)) {
+    if(req.user.joined_group.includes(group_code) && (checkGroupMember.member_id.includes(req.user._id) || checkGroupMember.id_leader == req.user_id)) {
         // sudah dalam grup
         return res.status(400).json({message : "Already in group"})
     } 
@@ -113,9 +113,8 @@ const GenerateCode = asyncHandler(async (req,res,next) => {
         return res.status(401).json({message : "Only leader can regenerate invite code"})
     }
     const newInvite = "#" + req.group.group_name + "-" + `${Date.now()}`
-    await Group.findByIdAndUpdate(req.group._id, {
-        invite_code : newInvite
-    })
+    req.group.invite_code = newInvite
+    await req.group.save()
     
     return res.status(201).json({message : "New invite code created", newInvite})
 
@@ -214,6 +213,18 @@ const DetailGroup = asyncHandler(async (req,res,next) => {
 })
 
 /**
+    PATCH /id/:groupID/description
+    Update group description
+*/
+const UpdateDescription = asyncHandler(async (req,res,next) => {
+    req.group.description = req.body.description;
+    await req.group.save()
+    
+    return res.status(201).json({message : "description updated"})
+
+})
+
+/**
     GET /id/:groupID/member
     List detail mengenai group
 */
@@ -303,5 +314,6 @@ module.exports = {
     GenerateCode,
     DetailGroup,
     GetScheduleGroup,
-    DetailAnggotaGroup
+    DetailAnggotaGroup,
+    UpdateDescription
 }

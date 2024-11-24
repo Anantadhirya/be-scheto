@@ -8,6 +8,10 @@ const InboxSchema = new mongoose.Schema({
         required : true,
         trim : true,
     }, 
+    title : {
+        type : String,
+        trim : true,
+    },
     is_for_individual : {
         type : Boolean,
         required : true,

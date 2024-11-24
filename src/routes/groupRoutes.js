@@ -21,11 +21,12 @@ router.get("/id/:groupID/schedule/available", GroupMiddleware.EnsureMember) // f
 
 router.patch("/id/:groupID/generate-code",  GroupMiddleware.EnsureMember, GroupController.GenerateCode) // regenerate code
 router.get("/id/:groupID/detail", GroupMiddleware.EnsureMember, GroupController.DetailGroup) // group detail
+router.patch("/id/:groupID/description", GroupMiddleware.EnsureMember, GroupController.UpdateDescription) // group detail
 router.get("/id/:groupID/member", GroupMiddleware.EnsureMember, GroupController.DetailAnggotaGroup) // get all of member detail
 
 router.delete("/leave/:groupID", GroupMiddleware.EnsureMember, GroupController.LeaveGroup) // leave group
 
-router.patch("/join/:groupCode", GroupController.JoinGroup)
+router.patch("/join", GroupController.JoinGroup)
 router.post("/create", GroupMiddleware.validateBodyCreateGroup, GroupController.CreateGroup)
 router.get("/list", GroupController.ListGroupUser)
 

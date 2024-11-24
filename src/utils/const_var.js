@@ -14,7 +14,8 @@ const allowed_schedule_type = [
 
 const allowed_gender = [
     'female',
-    'male'
+    'male',
+    'other'
 ]
 
 
