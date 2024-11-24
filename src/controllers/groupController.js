@@ -240,6 +240,7 @@ const DetailAnggotaGroup = asyncHandler(async (req,res,next) => {
     query : {
         startTime,
         endTime,
+        is_all
     }
 */
 const GetScheduleGroup = asyncHandler(async (req,res,next) => {
@@ -249,12 +250,19 @@ const GetScheduleGroup = asyncHandler(async (req,res,next) => {
         return res.status(400).json({ errors: errors.array() });
     }
     
-    const { startTime, endTime } = req.query
-
-    const schedulesGroup = await Schedule.find({ 
-        'group_data.id_group': { $ne: null }, // Only include documents where id_group is not null
-        start_time: { $gte: startTime, $lte: endTime }, // Filter by start_time within the range    
-    })
+    const { startTime, endTime, is_all } = req.query
+    const { groupID } = req.params
+    const query = 
+        is_all == "true" ? 
+        { 
+            'group_data.id_group': { $eq: groupID }, // Only include documents where id_group is not null  
+        }
+        :
+        { 
+            'group_data.id_group': { $eq: groupID }, // Only include documents where id_group is not null
+            start_time: { $gte: startTime, $lte: endTime }, // Filter by start_time within the range    
+        }
+    const schedulesGroup = await Schedule.find(query)
         .populate({
             path: 'id_creator',
             select: 'username email', // Include only specific fields from the user document

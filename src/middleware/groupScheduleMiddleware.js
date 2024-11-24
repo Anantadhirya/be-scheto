@@ -8,7 +8,7 @@ const Schedule = require("../models/Schedule")
 
 const EnsureScheduleExist = async (req,res,next) => {
     try {
-        const { scheduleID } = req.params;
+        const { scheduleID, groupID } = req.params;
 
         const checkSchedule = await Schedule.findOne({$and : [
             { _id : scheduleID }
@@ -17,15 +17,13 @@ const EnsureScheduleExist = async (req,res,next) => {
             // group doesnt exist
             return res.status(401).json({message : "Schedule not found"})
         }
+        if(checkSchedule.group_data.id_group?.toString() != groupID) {
+            return res.status(401).json({message : "Schedule is not accessible by group"})
+        }
         const isInUserGroup = (value) => {
-            return value.id_group.toString() == checkSchedule?.group_data?.id_group?.toString();
+            return value.id_group.toString() == groupID;
         }
-    
-        const isUserJoining = (value) => {
-            return value.toString() == req.user._id.toString();
-        }
-    
-        if(req.user.joined_group.findIndex(isInUserGroup) == -1 && !checkSchedule.group_data.member_joining.findIndex(isUserJoining) == -1 && checkSchedule.id_creator.toString() != req.user._id.toString()) {
+        if(req.user.joined_group.findIndex(isInUserGroup) == -1 && checkSchedule.id_creator.toString() != req.user._id.toString()) {
             // group doesnt exist
             return res.status(401).json({message : "Schedule cannot be accessed"})
         }

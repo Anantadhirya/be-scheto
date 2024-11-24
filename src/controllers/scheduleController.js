@@ -110,7 +110,7 @@ const GetSchedule = asyncHandler(async (req,res,next) => {
             return true;
         }
 
-        return is_all ? is_all : schedule.start_time >= start && schedule.end_time <= end;
+        return is_all == "true" ? true : schedule.start_time >= start && schedule.end_time <= end;
     });
 
     return res.status(200).json({schedules : filteredSchedules})
