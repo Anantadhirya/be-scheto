@@ -4,6 +4,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser")
 const mongoose = require("mongoose")
+const helmet = require("helmet")
 
 const errorHandler = require("./src/middleware/errorHandler");
 const rateLimiter = require("./src/middleware/rateLimiter")
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(rateLimiter.rateLimiterStandard)
+app.use(helmet.xssFilter());
 
 // Routes
 app.route("/").get((req, res, next) => {
