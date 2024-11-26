@@ -2,7 +2,7 @@ const cookieConfig = {
     maxAge : 1000 * 60 * 60 * 24,
     httpOnly : true,
     secure : process.env.environment == "development" ? false : true,
-    sameSite : 'lax',
+    sameSite : process.env.environment == "development" ?'lax' : 'none',
     domain : process.env.FE_DOMAIN,
 }
 
