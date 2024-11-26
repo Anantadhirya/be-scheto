@@ -3,7 +3,7 @@ let allowedOrigins = ['http://localhost:3000',
 
 const corsConfig = () => {
     if(process.env.environment == "production") {
-        let allowedOrigins = [];
+        let allowedOrigins = [process.env.FE_DOMAIN];
         return {
             origin: function(origin, callback){
                 // allow requests with no origin 
