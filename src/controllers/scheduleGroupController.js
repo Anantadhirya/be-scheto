@@ -278,6 +278,10 @@ const UpdateScheduleDetail = asyncHandler(async(req,res,next) => {
     reject schedule invitation
 */
 const RejectGroupEvent = asyncHandler(async(req,res,next) => {
+    if(req.schedule.id_creator.toString() == req.user._id.toString()) {
+        return res.status(401).json({message : "You created this, you can't reject it"});
+    }
+
     const filteredMemberJoining = req.schedule.group_data.member_joining.filter((value) => {
         return value.toString() != req.user._id.toString();
     })

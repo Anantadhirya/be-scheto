@@ -63,7 +63,7 @@ const PatchProfileUser = asyncHandler(async (req,res,next) => {
 */
 const GetProfileDetail = asyncHandler(async (req,res,next) => {
     // data user 
-    const dataUser = await User.findById(req.user._id).select("username firstName lastName email address phoneNumber gender -_id").lean();
+    const dataUser = await User.findById(req.user._id).select("username firstName lastName email address phoneNumber gender _id").lean();
     //console.log(dataUser)
 
     return res.status(201).json(dataUser)
