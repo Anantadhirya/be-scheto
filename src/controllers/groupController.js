@@ -290,7 +290,7 @@ const GetScheduleGroup = asyncHandler(async (req,res,next) => {
         .lean();
     
 
-    const idMember = req.group.member_id.map((value) => value.id_user);
+    const idMember = [req.group.member_id.map((value) => value.id_user), req.group.id_leader];
     const individualMemberSchedule = await Schedule.find({ 
         id_creator: { $in: idMember}, 
         is_user_owned: true, 

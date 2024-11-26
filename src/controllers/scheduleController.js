@@ -23,6 +23,13 @@ const scheduleUtils = require("../utils/schedule")
     }
 */
 const PostNewSchedule = asyncHandler(async (req,res,next) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    
     const { title, description, startDate, endDate, recurrence, isPrivate } = req.body;
     // Parse dates
     const start = parseISO(startDate);
@@ -78,13 +85,20 @@ const PostNewSchedule = asyncHandler(async (req,res,next) => {
     Get jadwal berdasarkan rentang tertentu milik individu
 */
 const GetSchedule = asyncHandler(async (req,res,next) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+
     const { startDate, endDate, is_all } = req.query;
 
     const start = new Date(startDate);
     const end = new Date(endDate);
 
     if (start > end) {
-        return res.status(400).json({ message: "startDate cannot be after endDate." });
+        return res.status(400).json({ message: "start date cannot be after endDate." });
     }
 
     const schedules = await Schedule.find({
@@ -117,17 +131,24 @@ const GetSchedule = asyncHandler(async (req,res,next) => {
 }) 
 
 /**
-    DELETE /schedule/individual/:scheduleID
+    DELETE /schedule/individual/:scheduleID?is_repeat_until=boolean&repeat_until=date
     delete jadwal individu
 */
 const DeleteSchedule = asyncHandler(async(req,res,next) => {
     const { scheduleID } = req.params;
+    const { is_repeat_until, repeat_until } = req.query;
     if(req.schedule.id_creator.toString() != req.user._id.toString()) {
         return res.status(401).json({message : "You cannot delete this schedule"})
     }
-    await Schedule.findByIdAndDelete(scheduleID);
+    if(is_repeat_until == "true") {
+        req.schedule.repeat_until = repeat_until;
+        await req.schedule.save();
+        return res.status(200).json({message : "Schedule have been updated", repeat_until : repeat_until})
 
-    return res.status(200).json({message : "Schedule have been deleted"})
+    } else {
+        await Schedule.findByIdAndDelete(scheduleID);
+        return res.status(200).json({message : "Schedule have been deleted"})
+    }
 
 })
 
@@ -169,6 +190,7 @@ const GetScheduleDetail = asyncHandler(async(req,res,next) => {
     }
 */
 const UpdateScheduleDetail = asyncHandler(async(req,res,next) => {
+    //console.log("TEST")
     const { title, description, startDate, endDate, recurrence, isPrivate, repeatUntil } = req.body;
 
     if(req.schedule.id_creator.toString() != req.user._id.toString()) {
@@ -192,8 +214,8 @@ const UpdateScheduleDetail = asyncHandler(async(req,res,next) => {
 
     req.schedule.title = title;
     req.schedule.description = description;
-    req.schedule.start_date = startDate;
-    req.schedule.end_date = endDate;
+    req.schedule.start_time = startDate;
+    req.schedule.end_time = endDate;
     req.schedule.is_private = isPrivate;
     if(repeatUntil) {
         req.schedule.repeat_until = repeatUntil;
@@ -203,25 +225,25 @@ const UpdateScheduleDetail = asyncHandler(async(req,res,next) => {
     switch(recurrence){
         case "DAILY":
             req.schedule.schedule_type = recurrence;
-            req.schedule.recurrence.daily = true;
+            req.schedule.recurrence.daily.enabled = true;
             req.schedule.recurrence.weekly.enabled = false;
             req.schedule.recurrence.monthly.enabled = false;
             break;
         case "MONTHLY":
-            req.schedule.recurrence.daily = false;
+            req.schedule.recurrence.daily.enabled = false;
             req.schedule.recurrence.weekly.enabled = false;
             req.schedule.recurrence.monthly.enabled = true;
             req.schedule.recurrence.monthly.dates = dayOfMonth;
             break;
         case "NONE":
             req.schedule.schedule_type = recurrence;
-            req.schedule.recurrence.daily = false;
+            req.schedule.recurrence.daily.enabled = false;
             req.schedule.recurrence.weekly.enabled = false;
             req.schedule.recurrence.monthly.enabled = false;
             break;
         case "WEEKLY":
             req.schedule.schedule_type = recurrence;
-            req.schedule.recurrence.daily = false;
+            req.schedule.recurrence.daily.enabled = false;
             req.schedule.recurrence.weekly.enabled = true;
             req.schedule.recurrence.weekly.days_of_week = dayName;
             req.schedule.recurrence.monthly.enabled = false;

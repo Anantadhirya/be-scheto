@@ -21,6 +21,13 @@ const Inbox = require("../models/Inbox")
     }
 */
 const PostNewSchedule = asyncHandler(async (req,res,next) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    
     const { title, description, startDate, endDate, member_ids } = req.body;
     const { groupID } = req.params
     // Parse dates
@@ -37,6 +44,7 @@ const PostNewSchedule = asyncHandler(async (req,res,next) => {
 
     const session = await mongoose.startSession();
     let newSchedule;
+    let populateNewSchedule;
     try {
         
         session.startTransaction()
@@ -72,13 +80,26 @@ const PostNewSchedule = asyncHandler(async (req,res,next) => {
         }], {
             session : session
         })
+        populateNewSchedule = await Schedule.findById(newSchedule[0]._id)
+        .populate('id_creator', 'username email _id') // Populate `id_creator` with specific fields
+        .populate({
+            path: 'group_data.member_joining',
+            select: 'username email _id', // Only select the `name` and `email` fields
+        })
+        .populate({
+            path: 'group_data.member_rejected',
+            select: 'username email _id', // Only select the `name` and `email` fields
+        })
+        .populate('group_data.id_group', 'group_name') // Populate `id_group` with specific fields
+        .session(session)
 
         const insertManyInbox = member_ids.map((value) => {
             return {
                 for_group_id : groupID,
                 for_user_id : value,
-                message : `You have been invited by ${req.user.username} to "${newSchedule.title}"`,
-                is_for_individual : true
+                message : `You have been invited by ${req.user.username} to "${newSchedule[0].title}"`,
+                is_for_individual : true,
+                title : `${newSchedule[0].title} Invitation`
             }
         })
 
@@ -96,9 +117,7 @@ const PostNewSchedule = asyncHandler(async (req,res,next) => {
         session.endSession();
     }
 
-    
-
-    return res.status(201).json({schedule : newSchedule.toObject(), message : "Group Schedule succesfully created"});
+    return res.status(201).json({schedule : populateNewSchedule.toObject(), message : "Group Schedule succesfully created"});
 })  
 
 /**
@@ -122,7 +141,8 @@ const DeleteSchedule = asyncHandler(async(req,res,next) => {
                 for_group_id : groupID,
                 for_user_id : value,
                 message : `Event "${req.schedule.title}" has been deleted by ${req.user.username}`,
-                is_for_individual : true
+                is_for_individual : true,
+                title : `${req.schedule.title} Cancelled`
             }
         })
 
@@ -228,7 +248,8 @@ const UpdateScheduleDetail = asyncHandler(async(req,res,next) => {
                 for_group_id : groupID,
                 for_user_id : value,
                 message : `Event "${req.schedule.title}" has been updated by ${req.user.username}`,
-                is_for_individual : true
+                is_for_individual : true,
+                title : `${req.schedule.title} Updated`
             }
         })
 
@@ -279,7 +300,8 @@ const RejectGroupEvent = asyncHandler(async(req,res,next) => {
             for_group_id : req.schedule.group_data.id_group,
             for_user_id : req.schedule.id_creator,
             message : `${req.user.username} rejected the event "${req.schedule.title}"`,
-            is_for_individual : false
+            is_for_individual : false,
+            title : `"${req.schedule.title}" Rejected`
         }], {
             session : session,
         });

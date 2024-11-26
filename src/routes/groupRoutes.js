@@ -12,7 +12,7 @@ const GroupScheduleMiddleware = require("../middleware/groupScheduleMiddleware")
 router.use(AuthMiddleware.EnsureUser)
 
 router.get("/id/:groupID/schedule", GroupMiddleware.EnsureMember, GroupMiddleware.validateQueryGetSchedule, GroupController.GetScheduleGroup) // schedule of group
-router.post("/id/:groupID/schedule", GroupMiddleware.EnsureMember, GroupScheduleController.PostNewSchedule) // post new event
+router.post("/id/:groupID/schedule", GroupScheduleMiddleware.validateInsertSchedule,GroupMiddleware.EnsureMember, GroupScheduleController.PostNewSchedule) // post new event
 router.get("/id/:groupID/schedule/:scheduleID", GroupMiddleware.EnsureMember, GroupScheduleMiddleware.EnsureScheduleExist, GroupScheduleController.GetScheduleDetail) // get group event
 router.patch("/id/:groupID/schedule/:scheduleID", GroupMiddleware.EnsureMember, GroupScheduleMiddleware.EnsureScheduleExist, GroupScheduleController.UpdateScheduleDetail) // edit event
 router.delete("/id/:groupID/schedule/:scheduleID", GroupMiddleware.EnsureMember, GroupScheduleMiddleware.EnsureScheduleExist, GroupScheduleController.DeleteSchedule) // delete event

@@ -48,7 +48,7 @@ const EnsureMember = async (req,res,next) => {
                 req.isLeader = true;
             }
         } else {
-            return res.status(401).json({message : "Not a member or leader of a group"})
+            return res.status(401).json({message : "Not a member or leader the a group"})
         }
         next();
     } catch (error) {

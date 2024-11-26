@@ -6,8 +6,34 @@ const User = require("../models/User")
 const Group = require("../models/Group")
 const Schedule = require("../models/Schedule")
 
+const validateInsertSchedule = [
+    body('title')
+        .notEmpty().withMessage("title cannot be empty")
+    ,
+    body('description')
+        .optional()
+    ,
+    body('startDate')
+        .notEmpty().withMessage("start date cannot be empty")
+        .isISO8601().withMessage("start date have to be valid date")
+    ,
+    body('endDate')
+        .notEmpty().withMessage("end date cannot be empty")
+        .isISO8601().withMessage("end date have to be valid date")
+    ,
+    body('member_ids')
+        .optional()
+        .isArray().withMessage("have to be an array of member ids")
+    ,
+]
+
 const EnsureScheduleExist = async (req,res,next) => {
     try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
         const { scheduleID, groupID } = req.params;
 
         const checkSchedule = await Schedule.findOne({$and : [
@@ -36,5 +62,6 @@ const EnsureScheduleExist = async (req,res,next) => {
 }
 
 module.exports = {
-    EnsureScheduleExist
+    EnsureScheduleExist,
+    validateInsertSchedule
 }
