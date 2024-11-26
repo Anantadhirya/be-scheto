@@ -1,9 +1,7 @@
-let allowedOrigins = ["http://localhost:3000", "http://yourapp.com"];
-
 const corsConfig = () => {
   if (process.env.environment == "production") {
     return {
-      origin: process.env.FE_URL,
+      origin: true,
       credentials: true,
     };
   } else {
