@@ -18,7 +18,7 @@
   ```bash
   npm install
   ```
-- Create a `.env` file in the root directory and add the required environment variables.
+- Create a `.env` file in the root directory and add the required environment variables, template can be seen in `.env.example`.
 - Run the development server:
   ```bash
   npm run dev
