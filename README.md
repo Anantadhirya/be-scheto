@@ -30,6 +30,6 @@
 - GitHub Repository
   - Frontend: [https://github.com/Anantadhirya/fe-scheto](https://github.com/Anantadhirya/fe-scheto)
   - Backend: [https://github.com/Anantadhirya/be-scheto](https://github.com/Anantadhirya/be-scheto)
-- Deployment: [https://scheto.vercel.app](https://apischeto.technocorner.id)
+- Deployment: [https://apischeto.technocorner.id](https://apischeto.technocorner.id)
 - Presentation video:
-- Presentation file: [https://www.canva.com/design/DAGXh_0lzmo/GNoiUhneZNfjdh3o3-iKWA/edit?utm_content=DAGXh_0lzmo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton]Canva Presentation
+- Presentation file: [https://www.canva.com/design/DAGXh_0lzmo/GNoiUhneZNfjdh3o3-iKWA/edit?utm_content=DAGXh_0lzmo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton](Presentation)
