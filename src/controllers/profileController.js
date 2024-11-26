@@ -36,6 +36,10 @@ const PatchProfileUser = asyncHandler(async (req,res,next) => {
         req.user.address = req.body.address;
         anyChanged = true;
     }
+    if(req.body.profile_image_url) {
+        req.user.profile_image_url = req.body.profile_image_url;
+        anyChanged = true;
+    }
     if(req.body.email) {
         // cek email nya 
         const findEmail = User.find({email : req.body.email});
@@ -43,10 +47,6 @@ const PatchProfileUser = asyncHandler(async (req,res,next) => {
             return res.status(400).json({message : "Email is already used"})
         }
         req.user.email = req.body.email;
-        anyChanged = true;
-    }
-    if(req.body.gender) {
-        req.user.gender = req.body.gender;
         anyChanged = true;
     }
     if(anyChanged) {
